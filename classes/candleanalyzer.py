@@ -99,13 +99,13 @@ class CandleAnalyzer:
         slope = (cfork.y3 - cfork.y2) / (cfork.x3 - cfork.x2)
         print('CFork slope:', slope)
 
-        cforkTargetY = slope * (self.data[len(self.data) - 1][0] - cfork.x2) + cfork.y2
+        cforkTargetY = slope * (self.data[-1][0] - cfork.x2) + cfork.y2
         print('CFork target:', cforkTargetY)
-        print('Current price:', self.data[len(self.data) - 1][2])
+        print('Current price:', self.data[-1][2])
 
-        if self.data[len(self.data) - 1][2] > cforkTargetY:
+        if self.data[-1][2] > cforkTargetY:
             print('Last candle high over last bullish fork')
         else:
             print('Last candle high under last bullish fork')
-        if self.data[len(self.data) - 1][2] > cforkTargetY > self.data[len(self.data) - 1][3]:
+        if self.data[-1][2] > cforkTargetY > self.data[-1][3]:
             print('Last candle crossed last bullish fork')

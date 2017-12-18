@@ -35,7 +35,7 @@ for timeframe in analyzedTimeframes:
 
     # Print status of last CFork
     if len(cforks) > 0:
-        candleAnalyzerInstance.printCForkStatus(cforks[len(cforks) - 1])
+        candleAnalyzerInstance.printCForkStatus(cforks[-1])
 
     print()
 
