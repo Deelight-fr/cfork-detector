@@ -11,8 +11,8 @@ from classes.candlegraph import CandleGraph
 data = ExchangeData.getJson()
 
 timeframe = None
-fractals = None
-cforks = None
+topFractals = None
+bullishCFforks = None
 
 analyzedTimeframes = ['3600', str(3600*4), str(3600*24)]
 
@@ -25,17 +25,17 @@ for timeframe in analyzedTimeframes:
     # Keeping last 200 candles
     candleAnalyzerInstance.loadData(data[timeframe][-200:])
 
-    fractals = candleAnalyzerInstance.getFractals()
+    topFractals = candleAnalyzerInstance.getTopFractals()
 
-    print('Fractals #:', len(fractals))
+    print('Fractals #:', len(topFractals))
 
-    cforks = candleAnalyzerInstance.getBullishCForks(fractals)
+    bullishCFforks = candleAnalyzerInstance.getBullishCForks(topFractals)
 
-    print('Cforks #:', len(cforks))
+    print('Cforks #:', len(bullishCFforks))
 
     # Print status of last CFork
-    if len(cforks) > 0:
-        candleAnalyzerInstance.printCForkStatus(cforks[-1])
+    if len(bullishCFforks) > 0:
+        candleAnalyzerInstance.printCForkStatus(bullishCFforks[-1])
 
     print()
 
@@ -44,6 +44,6 @@ for timeframe in analyzedTimeframes:
 graph = CandleGraph()
 # Keeping last 200 candles
 graph.load(data[timeframe][-200:])
-graph.drawFractals(fractals)
-graph.drawCForks(cforks)
+graph.drawTopFractals(topFractals)
+graph.drawBullishCForks(bullishCFforks)
 graph.show()

@@ -13,7 +13,7 @@ class CandleAnalyzer:
     def loadData(self, data):
         self.data = data
 
-    def getFractals(self):
+    def getTopFractals(self):
         # Custom method 1 (check N candles before, N after)
         # N = scanPeriod
 

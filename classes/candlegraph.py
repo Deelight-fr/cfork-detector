@@ -33,7 +33,7 @@ class CandleGraph:
         df = pd.read_json(json.dumps(data))
         df.rename(columns={0: 'date', 1: 'open', 2: 'high', 3: 'low', 4: 'close', 5: 'volume', 6: 'unknown'}, inplace=True)
         df["date"] = pd.to_datetime(df["date"], unit='s')
-        print(df.to_csv())
+        # print(df.to_csv())
 
         inc = df.close > df.open
         dec = df.open > df.close
@@ -50,11 +50,11 @@ class CandleGraph:
         self.p.vbar(df.date[dec], w, df.open[dec], df.close[dec], fill_color="#F2583E", line_color="black")
         # </TEST>
 
-    def drawFractals(self, fractals):
+    def drawTopFractals(self, fractals):
         for idx, value in enumerate(fractals):
             plt.plot([fractals[idx][0]], [fractals[idx][1]], 'g1')
 
-    def drawCForks(self, cforks):
+    def drawBullishCForks(self, cforks):
 
         cforksDrawn = 0
         cforkColors = ['red', 'orange']
@@ -82,6 +82,6 @@ class CandleGraph:
         plt.show()
 
         # <TEST>
-        output_file("output/candlestick.html", title="candlestick chart")
-        show(self.p)
+        # output_file("output/candlestick.html", title="candlestick chart")
+        # show(self.p)
         # </TEST>
