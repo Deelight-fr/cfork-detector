@@ -10,6 +10,7 @@ class ExchangeData:
 
     @staticmethod
     def getJson():
+
         # dataFile = 'gdax-btcusd.json'
         dataFile = 'data-samples/kraken-etceur.json'
         data = json.load(open(dataFile))
