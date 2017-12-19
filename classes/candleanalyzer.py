@@ -43,6 +43,36 @@ class CandleAnalyzer:
 
         return fractals
 
+    def getBottomFractals(self):
+        # Custom method 1 (check N candles before, N after)
+        # N = scanPeriod
+
+        scanPeriod = 2
+
+        fractals = []
+
+        for idx, candle in enumerate(self.data):
+            # data elements : ts, open, high, low, close, ...
+
+            # previous N
+            if idx > scanPeriod - 1:
+                previous = self.data[idx - scanPeriod:idx]
+                lows = [x[3] for x in previous]
+                previousPeriodLow = min(lows)
+
+            # next N
+            if idx < len(self.data) - (scanPeriod - 1):
+                following = self.data[idx + 1:idx + scanPeriod]
+                lows = [x[3] for x in following]
+                followingPeriodLow = min(lows)
+
+            if (scanPeriod - 1 < idx < len(self.data) - (scanPeriod - 1) and
+                    candle[3] < previousPeriodLow and
+                    candle[3] < followingPeriodLow):
+                fractals.append([candle[0], candle[3]])
+
+        return fractals
+
     def getBullishCForks(self, fractals):
         computedCForks = []
 

@@ -54,6 +54,10 @@ class CandleGraph:
         for idx, value in enumerate(fractals):
             plt.plot([fractals[idx][0]], [fractals[idx][1]], 'g1')
 
+    def drawBottomFractals(self, fractals):
+        for idx, value in enumerate(fractals):
+            plt.plot([fractals[idx][0]], [fractals[idx][1]], 'r1')
+
     def drawBullishCForks(self, cforks):
 
         cforksDrawn = 0
