@@ -73,21 +73,21 @@ class CandleAnalyzer:
 
         return fractals
 
-    def getBullishCForks(self, fractals):
+    def getBullishCForks(self, topFractals):
         computedCForks = []
 
-        for idx, value in enumerate(fractals):
+        for idx, value in enumerate(topFractals):
 
-            if idx < len(fractals) - 2:
+            if idx < len(topFractals) - 2:
                 # The two last fractals can't build a full cfork (3 needed)
 
                 # First fractal
-                x1 = fractals[idx][0]
-                y1 = fractals[idx][1]
+                x1 = topFractals[idx][0]
+                y1 = topFractals[idx][1]
 
                 # Second fractal
-                x2 = fractals[idx + 1][0]
-                y2 = fractals[idx + 1][1]
+                x2 = topFractals[idx + 1][0]
+                y2 = topFractals[idx + 1][1]
 
                 # Slope
                 slope1to2 = (y2 - y1) / (x2 - x1)
@@ -98,10 +98,10 @@ class CandleAnalyzer:
                     idxOffset = 2
                     forkLineFound = False
                     failedFork = False
-                    while idx + idxOffset < len(fractals) and not forkLineFound and not failedFork:
+                    while idx + idxOffset < len(topFractals) and not forkLineFound and not failedFork:
 
-                        x3 = fractals[idx + idxOffset][0]
-                        y3 = fractals[idx + idxOffset][1]
+                        x3 = topFractals[idx + idxOffset][0]
+                        y3 = topFractals[idx + idxOffset][1]
 
                         # Compute second slope
                         slope2to3 = (y3 - y2) / (x3 - x2)
@@ -124,7 +124,59 @@ class CandleAnalyzer:
 
         return computedCForks
 
-    def printCForkStatus(self, cfork):
+    def getBearishCForks(self, bottomFractals):
+        computedCForks = []
+
+        for idx, value in enumerate(bottomFractals):
+
+            if idx < len(bottomFractals) - 2:
+                # The two last fractals can't build a full cfork (3 needed)
+
+                # First fractal
+                x1 = bottomFractals[idx][0]
+                y1 = bottomFractals[idx][1]
+
+                # Second fractal
+                x2 = bottomFractals[idx + 1][0]
+                y2 = bottomFractals[idx + 1][1]
+
+                # Slope
+                slope1to2 = (y2 - y1) / (x2 - x1)
+
+                if slope1to2 > 0:
+
+                    # Now can we find the next line with a smaller slope?
+                    idxOffset = 2
+                    forkLineFound = False
+                    failedFork = False
+                    while idx + idxOffset < len(bottomFractals) and not forkLineFound and not failedFork:
+
+                        x3 = bottomFractals[idx + idxOffset][0]
+                        y3 = bottomFractals[idx + idxOffset][1]
+
+                        # Compute second slope
+                        slope2to3 = (y3 - y2) / (x3 - x2)
+
+                        # Second slope has to be positive but greater than first slope
+                        # Here we use a 1.5 factor to ignore almost flat forks
+                        # TODO : adapt this factor
+                        if slope2to3 > 0:
+                            if abs(slope2to3) * 1.5 < abs(slope1to2):
+
+                                newCfork = CFork([x1, y1], [x2, y2], [x3, y3])
+                                computedCForks.append(newCfork)
+
+                                forkLineFound = True
+                        else:
+                            # Failed fork - no solution
+                            failedFork = True
+
+                        idxOffset += 1
+
+        return computedCForks
+
+
+    def printBullishCForkStatus(self, cfork):
 
         slope = (cfork.y3 - cfork.y2) / (cfork.x3 - cfork.x2)
         print('CFork slope:', slope)
@@ -139,3 +191,19 @@ class CandleAnalyzer:
             print('Last candle high under last bullish fork')
         if self.data[-1][2] > cforkTargetY > self.data[-1][3]:
             print('Last candle crossed last bullish fork')
+
+    def printBearishCForkStatus(self, cfork):
+
+        slope = (cfork.y3 - cfork.y2) / (cfork.x3 - cfork.x2)
+        print('CFork slope:', slope)
+
+        cforkTargetY = slope * (self.data[-1][0] - cfork.x2) + cfork.y2
+        print('CFork target:', cforkTargetY)
+        print('Current price:', self.data[-1][2])
+
+        if self.data[-1][2] > cforkTargetY:
+            print('Last candle high over last bearish fork')
+        else:
+            print('Last candle high under last bearish fork')
+        if self.data[-1][2] > cforkTargetY > self.data[-1][3]:
+            print('Last candle crossed last bearish fork')

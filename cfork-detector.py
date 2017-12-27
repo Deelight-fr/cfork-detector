@@ -38,9 +38,17 @@ for timeframe in analyzedTimeframes:
 
     print('Cforks #:', len(bullishCFforks))
 
-    # Print status of last CFork
+    # Print status of last bullish CFork
     if len(bullishCFforks) > 0:
-        candleAnalyzerInstance.printCForkStatus(bullishCFforks[-1])
+        candleAnalyzerInstance.printBullishCForkStatus(bullishCFforks[-1])
+
+    bearishCFforks = candleAnalyzerInstance.getBearishCForks(bottomFractals)
+
+    print('Cforks #:', len(bearishCFforks))
+
+    # Print status of last bearish CFork
+    if len(bearishCFforks) > 0:
+        candleAnalyzerInstance.printBearishCForkStatus(bearishCFforks[-1])
 
     print()
 
@@ -52,4 +60,5 @@ graph.load(data[timeframe][-200:])
 graph.drawTopFractals(topFractals)
 graph.drawBottomFractals(bottomFractals)
 graph.drawBullishCForks(bullishCFforks)
+graph.drawBearishCForks(bearishCFforks)
 graph.show()
